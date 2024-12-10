@@ -92,7 +92,7 @@ fetch_metadata({ok, Role}, {ok, RequestHeaders}) ->
     Url = lists:flatten(io_lib:format("~s~s", [?CREDENTIAL_URL, Role])),
     case aws_credentials_httpc:request(get, Url, RequestHeaders) of
       {ok, 200, Body, _Headers} ->
-        Map = jsx:decode(Body),
+        Map = aws_credentials_json:decode(Body),
         {ok, {maps:get(<<"AccessKeyId">>, Map),
               maps:get(<<"SecretAccessKey">>, Map),
               maps:get(<<"Expiration">>, Map),
@@ -109,7 +109,7 @@ fetch_document({error, _Error} = Error) -> Error;
 fetch_document({ok, RequestHeaders}) ->
     case aws_credentials_httpc:request(get, ?DOCUMENT_URL, RequestHeaders) of
       {ok, 200, Body, _Headers} ->
-        Map = jsx:decode(Body),
+        Map = aws_credentials_json:decode(Body),
         {ok, maps:get(<<"region">>, Map)};
       Other -> {error, not200(ec2_document_unavailable, Other)}
     end.

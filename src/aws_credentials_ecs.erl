@@ -20,7 +20,7 @@ fetch(_Options) ->
            , <<"SecretAccessKey">> := SecretAccessKey
            , <<"Token">> := Token
            , <<"Expiration">> := Expiration
-           } = jsx:decode(Body),
+           } = aws_credentials_json:decode(Body),
           Creds =
             aws_credentials:make_map(?MODULE, AccessKeyId, SecretAccessKey, Token),
           {ok, Creds, Expiration};
